@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Para Fernanda 💖</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      background-color: #ec7aa8;
+    }
+
+    .container {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+      margin-top: 60px; /* Desce todo o conteúdo */
+    }
+
+    .envelope-container {
+      position: relative;
+      width: 300px;
+      height: 150px;
+      cursor: pointer;
+      transition: transform 0.5s;
+      margin-top: 350px; /* Desce o envelope para melhor leitura */
+    }
+
+    .flap {
+      position: absolute;
+      width: 100%;
+      height: 40%;
+      background-color: #c2185b;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top;
+      transition: transform 1s ease-in-out;
+      z-index: 3;
+    }
+
+    .base {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: #f8bbd0;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      z-index: 1;
+    }
+
+    .card {
+      position: absolute;
+      width: 100%;
+      background-color: white;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      border-radius: 10px;
+      padding: 14px;
+      box-sizing: border-box;
+      opacity: 0;
+      top: 100%;
+      transition: top 1s ease, opacity 1s ease;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-align: center;
+      height: 400px;
+    }
+
+    .card.open {
+      top: -450px;
+      opacity: 1;
+    }
+
+    .flap.open {
+      transform: rotateX(180deg);
+    }
+
+    .card h2 {
+      font-size: 20px;
+      color: #880e4f;
+      margin: 8px 0 4px 0;
+    }
+
+    .card p {
+      color: #4a148c;
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .carousel-container {
+      width: 240px;
+      height: 500px;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      background: rgba(255, 255, 255, 0.9); /* Somente fundo do carrossel */
+      position: relative;
+    }
+
+    .carousel {
+      display: flex;
+      transition: transform 0.4s ease;
+    }
+
+    .carousel img {
+      width: 240px;
+      height: 500px;
+      object-fit: cover;
+    }
+
+    .carousel-buttons {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+    }
+
+    .carousel-buttons button {
+      background: rgba(0,0,0,0.3);
+      border: none;
+      color: rgb(177, 26, 89);
+      font-size: 22px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+
+    .btn-share {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: #25D366;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: background 0.3s ease;
+      z-index: 1000;
+    }
+
+    .btn-share:hover {
+      background: #1ebe5d;
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Envelope -->
+  <div class="envelope-container" onclick="abrirEnvelope()">
+    <div class="flap" id="flap"></div>
+    <div class="base"></div>
+    <div class="card" id="card">
+      <h2>Querida Fernanda 💌</h2>
+      <p>Você não me deu apenas amor, mas também acolhimento, carinho e apoio incondicional.</p>
+      <p>É uma honra poder te chamar de segunda mãe. Obrigado por tudo que você é e representa na minha vida.</p>
+      <p>Que esta homenagem traga um pedacinho da alegria que você me dá todos os dias.</p>
+      <p><strong>Com todo meu amor 💖 do seu filho Uilian Games</strong></p>
+    </div>
+  </div>
+
+  <!-- Carrossel -->
+  <div class="carousel-container">
+    <div class="carousel" id="carousel">
+      <img src="im/FE1.jpg" alt="Foto 1">
+      <img src="im/FE2.jpg" alt="Foto 2">
+      <img src="im/FE3.jpg" alt="Foto 3">
+    </div>
+    <div class="carousel-buttons">
+      <button onclick="moverCarrossel(-1)">❮</button>
+      <button onclick="moverCarrossel(1)">❯</button>
+    </div>
+  </div>
+</div>
+
+<!-- Botão Compartilhar -->
+<button class="btn-share" onclick="compartilharWhatsApp()">💬 Compartilhar</button>
+
+<!-- Música de fundo -->
+<audio autoplay loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_b3f4446e7e.mp3?filename=romantic-piano-110095.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Scripts -->
+<script>
+
+  let aberto = false;
+
+  function abrirEnvelope() {
+    const flap = document.getElementById('flap');
+    const card = document.getElementById('card');
+
+    if (!aberto) {
+      flap.classList.add('open');
+      card.classList.add('open');
+      aberto = true;
+
+      // Rolar suavemente até a carta
+      setTimeout(() => {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 500);
+    } else {
+      flap.classList.remove('open');
+      card.classList.remove('open');
+      aberto = false;
+
+      // Rolar suavemente de volta ao envelope
+      setTimeout(() => {
+        flap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 500);
+    }
+  }
+
+
+
+  function compartilharWhatsApp() {
+    const link = encodeURIComponent("🌹 Fernanda, preparei algo especial pra você 💖 https://seusite.com/cartao");
+    window.open(`https://wa.me/?text=${link}`, '_blank');
+  }
+
+  let index = 0;
+  function moverCarrossel(direcao) {
+    const carousel = document.getElementById('carousel');
+    const totalSlides = carousel.children.length;
+    index += direcao;
+
+    if (index < 0) index = totalSlides - 1;
+    if (index >= totalSlides) index = 0;
+
+    carousel.style.transform = `translateX(-${index * 240}px)`;
+  }
+</script>
+
+</body>
+</html>
+
+
+
+
